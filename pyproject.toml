@@ -7,7 +7,11 @@ authors = [
     { name = "Aleksandr Sklyar", email = "sklyar16@yandex.ru" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "prompt>=0.4.1",
+    "ruff>=0.17.1",
+    "setuptools>=84.2.0",
+]
 
 [project.scripts]
 project = "primitive_db.main:main"
@@ -15,3 +19,17 @@ project = "primitive_db.main:main"
 [build-system]
 requires = ["uv_build>=0.13.3,<0.14.0"]
 build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = ["venv", ".venv", "dist", "__pycache__"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = [] 
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.1",
+]
