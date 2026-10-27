@@ -1,14 +1,14 @@
-import prompt
+from pathlib import Path
+
+from .core import get_command, welcome
+from .utils import load_metadata
 
 
-def welcome():
-    print('Первая попытка запустить проект!\n')
-    print('***\n')
-    print('<\033[32mcommand\033[0m>'
-          ' \033[32mexit\033[0m -  '
-          'выйти из программы'
-          '\n<\033[32mcommand\033[0m>'
-          ' \033[32mhelp\033[0m -  '
-          'справочная информация\n'
-          )
-    name = prompt.string('Введите команду: ')
+def run():
+    welcome()
+    filepath = Path(__file__).resolve().parent / "db_meta.json"
+    metadata = load_metadata(filepath=filepath)
+    while True:
+        command = get_command(metadata=metadata)
+        if command == "exit":
+            break
