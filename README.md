@@ -35,22 +35,22 @@ help - справочная информация
 
 ## Пример использования
 
->>>Введите команду: create_table users name:str age:int is_active:bool
+Введите команду: create_table users name:str age:int is_active:bool
 Таблица "users" успешно создана со столбцами: ID:int, name:str, age:int, is_active:bool
 
->>>Введите команду: create_table users name:str
+Введите команду: create_table users name:str
 Ошибка: Таблица "users" уже существует.
 
->>>Введите команду: list_tables
+Введите команду: list_tables
 - users
 
->>>Введите команду: drop_table users
+Введите команду: drop_table users
 Таблица "users" успешно удалена.
 
->>>Введите команду: drop_table customers
+Введите команду: drop_table customers
 Ошибка: Таблица "customers" не существует.
 
->>>Введите команду: create_table account rub:float usd:float
+Введите команду: create_table account rub:float usd:float
 Ошибка: тип данных "float" не поддерживается, используйте только int, str, bool.
 
 ## Сборка
