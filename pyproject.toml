@@ -9,6 +9,8 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "asciinema>=2.4.0",
+    "prettytable>=3.18.0",
+    "prettytables>=1.5.0",
     "prompt>=0.4.1",
     "ruff>=0.17.1",
     "setuptools>=84.2.0",
