@@ -162,6 +162,8 @@ def print_help():
 
 
 def insert(metadata, table_name, values):
+    '''Вставляет в существующую таблицу
+    переданные в скобках значение'''
     if table_name not in metadata:
         print(f'Ошибка: Таблицы с названием {table_name} не существует.')
         return
@@ -189,6 +191,8 @@ def insert(metadata, table_name, values):
 
 
 def select(table_name, where_clause):
+    '''Выводит на экран при помощи prettytable
+    содержимое таблицы по запросу where'''
     table = PrettyTable()
     table_data = get_table(table_name)
     if table_data is None:
@@ -215,6 +219,8 @@ def select(table_name, where_clause):
         print(table)
 
 def delete(table_name, where_clause):
+    '''Удаляет строку содержащую
+    условие where'''
     table_data = get_table(table_name)
     if table_data is None:
         return
@@ -235,6 +241,8 @@ def delete(table_name, where_clause):
 
 
 def update(table_name, set_clause, where_clause):
+    '''Меняет значение в ячейке set
+    по условию в where'''
     table_data = get_table(table_name)
     if table_data is None:
         return

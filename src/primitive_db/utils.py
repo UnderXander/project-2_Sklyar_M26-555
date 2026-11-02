@@ -44,6 +44,9 @@ def save_table_data(table_name, data):
         print(f'Ошибка: Таблицы с именем {table_name} не существует.')
 
 def get_ids(where_clause, table_data):
+    '''Функция возвращает id искомых
+    элементов в таблицы и используется в
+    функция update и delete'''
     for key, value in where_clause.items():
         key, value
     ids = []
@@ -59,6 +62,8 @@ def get_ids(where_clause, table_data):
         return
 
 def get_table(table_name):
+    '''Функция возвращает содержимое таблицы
+    Создана для сокращения дублирования кода'''
     table_path = BASE / "data" / f"{table_name}.json"
     try:
         with open(table_path, "r", encoding='utf-8') as f:
