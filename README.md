@@ -58,6 +58,12 @@ uv run database
 <command> exit - выйти из программы.
 <command> help - справочная информация.
 
+## Возможности
+
+При выполнении функции drop_table и delete требуется подтверждение действия.
+
+Функции select и insert ('долгие функции') выводят время выполнения на экран.
+
 ## Пример создания таблицы
 
 Введите команду: create_table users name:str age:int is_active:bool
@@ -101,6 +107,8 @@ uv build
 
 ## asciinema
 
-Посмотрите пример использование программы в аскинеме
+Посмотрите пример использование программы в аскинеме:
 https://asciinema.org/a/XHGCuOYVt7ziUJX0
 
+Работа программы с подтверждением действий (декораторы):
+https://asciinema.org/a/aV7KDDYHJBVZWn71

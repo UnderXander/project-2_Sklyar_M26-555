@@ -1,6 +1,7 @@
 import json
 
 from .constants import BASE
+from .decorators import handle_db_errors
 
 
 def load_metadata(filepath):
@@ -61,14 +62,12 @@ def get_ids(where_clause, table_data):
               f' не найдено в столбце {key}')
         return
 
+
+@handle_db_errors
 def get_table(table_name):
     '''Функция возвращает содержимое таблицы
     Создана для сокращения дублирования кода'''
     table_path = BASE / "data" / f"{table_name}.json"
-    try:
-        with open(table_path, "r", encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f'Ошибка: Таблицы с названием {table_name} не существует.')
-        return
+    with open(table_path, "r", encoding='utf-8') as f:
+        return json.load(f)
 
