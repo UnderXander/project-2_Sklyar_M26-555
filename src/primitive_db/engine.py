@@ -13,10 +13,12 @@ from .core import (
     update,
     welcome,
 )
+from .decorators import handle_db_errors
 from .parser import parser_update, parser_where
 from .utils import load_metadata
 
 
+@handle_db_errors
 def run():
     welcome()
     filepath = Path(__file__).resolve().parent / "db_meta.json"
@@ -27,7 +29,6 @@ def run():
             case "create_table":
                 if len(command) < 3:
                     print('Ошибка: В таблице должен быть хотя бы один столбец')
-                    return
                 else:
                     table_name = str(command[1])
                     create_table(metadata, table_name, command[2:])
@@ -48,34 +49,18 @@ def run():
                        table_name=command[2],
                        values=c)
             case "select":
-                try:
-                    where_clause = parser_where(command, user_input)
-                    select(table_name=command[2],
+                where_clause = parser_where(command, user_input)
+                select(table_name=command[2],
                            where_clause=where_clause)
-                except IndexError:
-                    print('Ошибка: неверный синтаксис команды '
-                          '(введите help для помощи)')
             case "delete":
-                try:
-                    where_clause = parser_where(command, user_input)
-                    delete(table_name=command[2],
+                where_clause = parser_where(command, user_input)
+                delete(table_name=command[2],
                            where_clause=where_clause)
-                except IndexError:
-                    print('Ошибка: неверный синтаксис команды '
-                          '(введите help для помощи)')
-                except KeyError:
-                    print('Ошибка: введено неверное имя столбца или параметра')
             case "update":
-                try:
-                    set_clause, where_clause = parser_update(command, user_input)
-                    update(table_name=command[1],
-                           set_clause=set_clause,
-                           where_clause=where_clause)
-                except IndexError:
-                    print('Ошибка: неверный синтаксис команды '
-                          '(введите help для помощи)')
-                except KeyError:
-                    print('Ошибка: введено неверное имя столбца или параметра')
+                set_clause, where_clause = parser_update(command, user_input)
+                update(table_name=command[1],
+                        set_clause=set_clause,
+                        where_clause=where_clause)
             case "info":
                 info(table_name=command[1], metadata=metadata)
             case _:

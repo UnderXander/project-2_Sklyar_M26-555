@@ -1,10 +1,12 @@
 import json
 import shlex
+from json import JSONDecodeError
 
 import prompt
 from prettytable import PrettyTable
 
 from .constants import BASE, TYPES
+from .decorators import confirm_action, handle_db_errors, log_time
 from .utils import get_ids, get_table, save_metadata, save_table_data
 
 
@@ -104,6 +106,7 @@ def list_tables(metadata):
             print(f'- {table}')
 
 
+@confirm_action("удаление таблицы")
 def drop_table(metadata, table_name):
     '''Проверяет существование таблицы с
     переданным именем
@@ -161,6 +164,7 @@ def print_help():
           ' - справочная информация.\n')
 
 
+@log_time
 def insert(metadata, table_name, values):
     '''Вставляет в существующую таблицу
     переданные в скобках значение'''
@@ -169,7 +173,11 @@ def insert(metadata, table_name, values):
         return
     table_data = get_table(table_name)
     ind = len(table_data["ID"]) + 1
-    values = json.loads(f'[{values}]')
+    try:
+        values = json.loads(f'[{values}]')
+    except JSONDecodeError:
+        print('Ошибка: значения типа str олжны быть переданы в кавычках ""')
+        return
     columns = list(metadata[table_name].items())[1:]
     if len(values) != len(columns):
         print("Ошибка: количество значений не совпадает с количеством столбцов")
@@ -190,6 +198,8 @@ def insert(metadata, table_name, values):
     save_table_data(table_name, data=table_data)
 
 
+@handle_db_errors
+@log_time
 def select(table_name, where_clause):
     '''Выводит на экран при помощи prettytable
     содержимое таблицы по запросу where'''
@@ -206,10 +216,8 @@ def select(table_name, where_clause):
             table.add_row(row)
         print(table)
     else:
-        try:
-            ids, key, value = get_ids(where_clause, table_data)
-        except TypeError:
-            return
+        ids, key, value = get_ids(where_clause, table_data)
+
         table.field_names = table_data.keys()
         for id_ in ids:
             row = []
@@ -218,6 +226,8 @@ def select(table_name, where_clause):
             table.add_row(row)
         print(table)
 
+@handle_db_errors
+@confirm_action("удаление строки")
 def delete(table_name, where_clause):
     '''Удаляет строку содержащую
     условие where'''
@@ -227,10 +237,7 @@ def delete(table_name, where_clause):
     if where_clause is None:
         print('Ошибка: введите условие <столбец> = <значение>')
         return
-    try:
-        ids, key, value = get_ids(where_clause, table_data)
-    except TypeError:
-        return
+    ids, key, value = get_ids(where_clause, table_data)
     for id_ in ids:
         for k in table_data:
             table_data[k].pop(id_)
@@ -240,6 +247,7 @@ def delete(table_name, where_clause):
     save_table_data(table_name, data=table_data)
 
 
+@handle_db_errors
 def update(table_name, set_clause, where_clause):
     '''Меняет значение в ячейке set
     по условию в where'''
@@ -248,10 +256,7 @@ def update(table_name, set_clause, where_clause):
         return
     for key_s, value_s in set_clause.items():
         key_s, value_s
-    try:
-        ids_w, key_w, value_w = get_ids(where_clause, table_data)
-    except TypeError:
-        return
+    ids_w, key_w, value_w = get_ids(where_clause, table_data)
     for id_ in ids_w:
         for k in table_data:
             table_data[key_s][id_] = value_s
